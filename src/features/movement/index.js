@@ -10,28 +10,40 @@ function respectBoundaries(oldPos, newPos) {
            : oldPos
 }
 
+function respectObstructions(oldPos, newPos) {
+  const x = newPos[0]/PLAYER_SIZE
+  const y = newPos[1]/PLAYER_SIZE
+  const { tiles } = store.getState().map
+  if (tiles[y][x] < 4) return respectBoundaries(oldPos, newPos)
+  return oldPos
+}
+
+function attemptMove(oldPos, newPos) {
+  return respectObstructions(oldPos, newPos)
+}
+
 function getNewPosition(oldPos, direction) {
   switch(direction) {
     case 'left':
-      return respectBoundaries(
+      return attemptMove(
         oldPos,
         [ oldPos[0]-PLAYER_SIZE, oldPos[1] ]
       )
     
     case 'right':
-      return respectBoundaries(
+      return attemptMove(
         oldPos,
         [ oldPos[0]+PLAYER_SIZE, oldPos[1] ]
       )
      
     case 'up':
-      return respectBoundaries(
+      return attemptMove(
         oldPos,
         [ oldPos[0], oldPos[1]-PLAYER_SIZE ]
       )
        
     case 'down':
-      return respectBoundaries(
+      return attemptMove(
         oldPos,
         [ oldPos[0], oldPos[1]+PLAYER_SIZE ]
       )
@@ -42,7 +54,7 @@ function getNewPosition(oldPos, direction) {
 }
 
 function handleDirectionMove(e, direction) {
-  const state = store.getState('player')
+  const state = store.getState()
   store.dispatch({
     type: "MOVE_PLAYER",
     payload: getNewPosition(state.player.position, direction)

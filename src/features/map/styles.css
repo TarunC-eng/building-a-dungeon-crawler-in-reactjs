@@ -1,0 +1,23 @@
+.row {
+  height: 20px;
+  line-height: 20px;
+}
+
+.tile {
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+}
+
+.tree {
+  background-image: url('/tiles/tree.png');
+  background-color: transparent;
+}
+
+.rock {
+  background-image: url('/tiles/rock.png');
+  background-color: transparent;
+}
+
+.path {
+}
