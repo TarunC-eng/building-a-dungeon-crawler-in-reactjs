@@ -1,8 +1,10 @@
 import { createStore, combineReducers } from 'redux'
 import playerReducer from '../features/player/reducer'
+import modalReducer from '../features/modal/reducer'
 
 const rootReducer = combineReducers({
   player: playerReducer,
+  modal:  modalReducer,
 })
 
 const store = createStore(

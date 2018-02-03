@@ -1,8 +1,14 @@
 import store from '../../config/store'
+import { startFight } from '../fight'
 
 function handleDirctionMove(e, direction) {
   console.log(`Moving ${direction}!`)
   store.dispatch({ type: "MOVE_PLAYER", payload: direction})
+
+  const roll = Math.random(10)*10
+  console.log(roll)
+  if (roll > 6) startFight()
+
   e.preventDefault()
 }
 

@@ -11,7 +11,7 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps(state) {
   return {
-    position: state.player.position
+    ...state.player
   }
 }
 

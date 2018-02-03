@@ -1,5 +1,6 @@
 import React from 'react'
 import handleMovement from './features/movement'
+import Modal from './features/modal'
 import Player from './features/player'
 
 import { MAP_HEIGHT, MAP_WIDTH } from './config/constants'
@@ -15,6 +16,7 @@ function App() {
         width: MAP_WIDTH,
       }}
     >
+      <Modal />
       <Player />
     </div>
   )
