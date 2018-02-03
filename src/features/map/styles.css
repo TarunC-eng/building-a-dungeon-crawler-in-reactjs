@@ -1,12 +1,5 @@
-.row {
-  height: 20px;
-  line-height: 20px;
-}
-
 .tile {
   display: inline-flex;
-  width: 20px;
-  height: 20px;
 }
 
 .tree {
@@ -16,6 +9,11 @@
 
 .rock {
   background-image: url('/tiles/rock.png');
+  background-color: transparent;
+}
+
+.chest {
+  background-image: url('/tiles/chest.png');
   background-color: transparent;
 }
 

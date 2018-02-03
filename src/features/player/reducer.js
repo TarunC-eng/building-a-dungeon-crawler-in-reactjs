@@ -1,5 +1,7 @@
 const initialState = {
   position: [0,0],
+  direction: 'east',
+  spriteLocation: '0 0',
 }
 
 const playerReducer = (state=initialState, action) => {
@@ -7,7 +9,7 @@ const playerReducer = (state=initialState, action) => {
     case 'MOVE_PLAYER':
       return {
         ...state,
-        position: action.payload,
+        ...action.payload,
       }
 
     default:

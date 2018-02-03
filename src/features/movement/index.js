@@ -1,51 +1,52 @@
 import store from '../../config/store'
-import { PLAYER_SIZE, MAP_HEIGHT, MAP_WIDTH } from '../../config/constants'
+import { TILE_SIZE, MAP_HEIGHT, MAP_WIDTH } from '../../config/constants'
 
 function respectBoundaries(oldPos, newPos) {
   return newPos[0] >= 0 &&
-         newPos[0] <= MAP_WIDTH - PLAYER_SIZE &&
+         newPos[0] <= MAP_WIDTH - TILE_SIZE &&
          newPos[1] >= 0 &&
-         newPos[1] <= MAP_HEIGHT - PLAYER_SIZE
-           ? newPos
-           : oldPos
+         newPos[1] <= MAP_HEIGHT - TILE_SIZE
 }
 
 function respectObstructions(oldPos, newPos) {
-  const x = newPos[0]/PLAYER_SIZE
-  const y = newPos[1]/PLAYER_SIZE
+  const x = newPos[0]/TILE_SIZE
+  const y = newPos[1]/TILE_SIZE
   const { tiles } = store.getState().map
-  if (tiles[y][x] < 4) return respectBoundaries(oldPos, newPos)
-  return oldPos
+  return (tiles[y][x] <= 5)
 }
 
 function attemptMove(oldPos, newPos) {
-  return respectObstructions(oldPos, newPos)
+  let canMove = respectBoundaries(oldPos, newPos)
+  if (canMove)
+    canMove = respectObstructions(oldPos, newPos)
+  
+  return (canMove) ? newPos : oldPos
 }
 
 function getNewPosition(oldPos, direction) {
   switch(direction) {
-    case 'left':
+    case 'west':
       return attemptMove(
         oldPos,
-        [ oldPos[0]-PLAYER_SIZE, oldPos[1] ]
+        [ oldPos[0]-TILE_SIZE, oldPos[1] ]
       )
     
-    case 'right':
+    case 'east':
       return attemptMove(
         oldPos,
-        [ oldPos[0]+PLAYER_SIZE, oldPos[1] ]
+        [ oldPos[0]+TILE_SIZE, oldPos[1] ]
       )
      
-    case 'up':
+    case 'north':
       return attemptMove(
         oldPos,
-        [ oldPos[0], oldPos[1]-PLAYER_SIZE ]
+        [ oldPos[0], oldPos[1]-TILE_SIZE ]
       )
        
-    case 'down':
+    case 'south':
       return attemptMove(
         oldPos,
-        [ oldPos[0], oldPos[1]+PLAYER_SIZE ]
+        [ oldPos[0], oldPos[1]+TILE_SIZE ]
       )
 
     default:
@@ -53,11 +54,28 @@ function getNewPosition(oldPos, direction) {
   }
 }
 
+function getSpriteLocation(direction) {
+  switch(direction) {
+    case 'south':
+      return `0px ${TILE_SIZE*0}px`
+    case 'east':
+      return `0px ${TILE_SIZE*1}px`
+    case 'west':
+      return `0px ${TILE_SIZE*2}px`
+    case 'north':
+      return `0px ${TILE_SIZE*3}px`
+  }
+}
+
 function handleDirectionMove(e, direction) {
   const state = store.getState()
   store.dispatch({
     type: "MOVE_PLAYER",
-    payload: getNewPosition(state.player.position, direction)
+    payload: {
+      position: getNewPosition(state.player.position, direction),
+      direction: direction,
+      spriteLocation: getSpriteLocation(direction),
+    }
   })
   e.preventDefault()
 }
@@ -65,16 +83,16 @@ function handleDirectionMove(e, direction) {
 function handleKeyDown(e) {
   switch(e.keyCode) {
     case 40:
-      handleDirectionMove(e, 'down')
+      handleDirectionMove(e, 'south')
       return
     case 37:
-      handleDirectionMove(e, 'left')
+      handleDirectionMove(e, 'west')
       return
     case 39:
-      handleDirectionMove(e, 'right')
+      handleDirectionMove(e, 'east')
       return
     case 38:
-      handleDirectionMove(e, 'up')
+      handleDirectionMove(e, 'north')
       return
     default:
       console.log(e.keyCode)

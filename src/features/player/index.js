@@ -1,7 +1,9 @@
 import React from 'react'
+import { TILE_SIZE } from '../../config/constants'
 import { connect } from 'react-redux'
 
 import './styles.css'
+import walkSprite from  './player_walk.png'
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -13,7 +15,7 @@ function mapDispatchToProps(dispatch) {
 
 function mapStateToProps(state) {
   return {
-    position: state.player.position
+    ...state.player
   }
 }
 
@@ -24,6 +26,10 @@ function Player(props) {
       style={{
         top: props.position[1],
         left: props.position[0],
+        backgroundImage: `url('${walkSprite}')`,
+        backgroundPosition: props.spriteLocation,
+        width: `${TILE_SIZE}px`,
+        height: `${TILE_SIZE}px`,
       }}
     />
   )
