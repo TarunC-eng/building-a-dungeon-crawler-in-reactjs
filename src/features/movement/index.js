@@ -17,8 +17,10 @@ function respectObstructions(oldPos, newPos) {
 
 function attemptMove(oldPos, newPos) {
   let canMove = respectBoundaries(oldPos, newPos)
-  if (canMove)
+  if (canMove) {
     canMove = respectObstructions(oldPos, newPos)
+    animateWalk()
+  }
   
   return (canMove) ? newPos : oldPos
 }
@@ -55,15 +57,17 @@ function getNewPosition(oldPos, direction) {
 }
 
 function getSpriteLocation(direction) {
+  const wi = store.getState().player.walkIndex
+  console.log(store.getState().player)
   switch(direction) {
     case 'south':
-      return `0px ${TILE_SIZE*0}px`
+      return `${TILE_SIZE*wi}px ${TILE_SIZE*0}px`
     case 'east':
-      return `0px ${TILE_SIZE*1}px`
+      return `${TILE_SIZE*wi}px ${TILE_SIZE*1}px`
     case 'west':
-      return `0px ${TILE_SIZE*2}px`
+      return `${TILE_SIZE*wi}px ${TILE_SIZE*2}px`
     case 'north':
-      return `0px ${TILE_SIZE*3}px`
+      return `${TILE_SIZE*wi}px ${TILE_SIZE*3}px`
   }
 }
 
@@ -97,6 +101,15 @@ function handleKeyDown(e) {
     default:
       console.log(e.keyCode)
   }
+}
+
+function updateWalkIndex() {
+  const index = store.getState().player.walkIndex
+  return (index < 8) ? index+1 : 0
+}
+
+function animateWalk() {
+  store.dispatch({type: 'UPDATE_WALK_INDEX', payload: updateWalkIndex()})
 }
 
 export default function handleMovement(wrappedComponent) {
