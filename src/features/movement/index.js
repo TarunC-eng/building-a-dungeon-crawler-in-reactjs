@@ -1,6 +1,16 @@
 import store from '../../config/store'
 import { TILE_SIZE, MAP_HEIGHT, MAP_WIDTH } from '../../config/constants'
 
+function randomFight() {
+  const fightChance = Math.random() * 10
+  if( fightChance > 9) store.dispatch({
+    type: 'SHOW_MODAL',
+    payload: {
+      type: 'FIGHT'
+    }
+  })
+}
+
 function respectBoundaries(oldPos, newPos) {
   return newPos[0] >= 0 &&
          newPos[0] <= MAP_WIDTH - TILE_SIZE &&
@@ -17,10 +27,10 @@ function respectObstructions(oldPos, newPos) {
 
 function attemptMove(oldPos, newPos) {
   let canMove = respectBoundaries(oldPos, newPos)
-  if (canMove) {
+  if (canMove)
     canMove = respectObstructions(oldPos, newPos)
-    animateWalk()
-  }
+  if (canMove) animateWalk()
+  randomFight()
   
   return (canMove) ? newPos : oldPos
 }
@@ -58,7 +68,6 @@ function getNewPosition(oldPos, direction) {
 
 function getSpriteLocation(direction) {
   const wi = store.getState().player.walkIndex
-  console.log(store.getState().player)
   switch(direction) {
     case 'south':
       return `${TILE_SIZE*wi}px ${TILE_SIZE*0}px`
@@ -85,6 +94,7 @@ function handleDirectionMove(e, direction) {
 }
 
 function handleKeyDown(e) {
+  e.preventDefault()
   switch(e.keyCode) {
     case 40:
       handleDirectionMove(e, 'south')
@@ -114,7 +124,7 @@ function animateWalk() {
 
 export default function handleMovement(wrappedComponent) {
   window.addEventListener('keydown', (e) => {
-    handleKeyDown(e, wrappedComponent)
+    if(!store.getState().modal.visible) handleKeyDown(e)
   })
   
   return wrappedComponent

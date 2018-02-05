@@ -15,7 +15,7 @@ const playerReducer = (state=initialState, action) => {
     case 'UPDATE_WALK_INDEX': {
       return {
         ...state,
-        walkIndex: action.payload
+        walkIndex: action.payload,
       }
     }
 

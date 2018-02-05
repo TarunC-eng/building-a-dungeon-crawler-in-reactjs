@@ -4,10 +4,9 @@ const initialState = {
 
 const mapReducer = (state=initialState, action) => {
   switch(action.type) {
-    case 'ADD_TILES':
+    case 'ADD_DATA':
       return {
-        ...state,
-        tiles: action.payload,
+        ...action.payload,
       }
 
     default:
